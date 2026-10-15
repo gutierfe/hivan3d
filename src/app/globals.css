@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0a0a0a;
+  --paper: #f2f1ee;
+  --muted: #bdbbb6;
+  --dim: #8a8883;
+  --line: #2a2a2a;
+  --stripe-a: #161616;
+  --stripe-b: #1d1d1d;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-line: var(--line);
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Poster display type: heavy, wide, tight. */
+.display {
+  font-weight: 900;
+  font-stretch: 115%;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.display-wide {
+  font-weight: 900;
+  font-stretch: 120%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+/* Mono label: small caps-like spec text. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Striped placeholder frames for turntables / reel until media lands. */
+.frame {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--stripe-a) 0 10px,
+    var(--stripe-b) 10px 20px
+  );
+}
+
+.frame-paper {
+  background: repeating-linear-gradient(135deg, #dddbd6 0 10px, #e6e4df 10px 20px);
+}
+
+/* Highlighter bar: inverted block behind a word. */
+.bar {
+  display: inline-block;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0 0.2em;
+}
+
+/* Underline-on-hover for nav and text links. */
+.link {
+  position: relative;
+  transition: color 160ms ease;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.link:hover::after,
+.link:focus-visible::after,
+.link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Project card hover: nudge the caption, brighten stripes. */
+.card .frame {
+  transition: filter 240ms ease;
+}
+.card:hover .frame,
+.card:focus-visible .frame {
+  filter: brightness(1.25);
+}
+.card:hover .card-title,
+.card:focus-visible .card-title {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+/* Marquee strip. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Reveal on load. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.rise-1 {
+  animation-delay: 60ms;
+}
+.rise-2 {
+  animation-delay: 140ms;
+}
+.rise-3 {
+  animation-delay: 220ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
 }

@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# hivan3d — Ivan F. Gutierrez Borjon, Character Rigging
 
-## Getting Started
+Portfolio site built from the Claude Design handoff (direction **1a: poster index**, black page, highlighter-bar titles, tight project grid) with project detail pages and an about page.
 
-First, run the development server:
+Stack: Next.js 16 (App Router, Cache Components), React 19, Tailwind CSS 4, TypeScript. Fonts: Archivo (variable, width axis) and JetBrains Mono via `next/font`.
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev      # http://localhost:3000
+pnpm build && pnpm start
+pnpm lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | What |
+| --- | --- |
+| `src/lib/data.ts` | All content: profile, projects, tools, skills, experience, nav. Edit this to change copy. |
+| `src/app/page.tsx` | Home: hero, marquee, project grid, tools + reel, contact. |
+| `src/app/work/[slug]/page.tsx` | Project detail pages, statically generated from `projects`. |
+| `src/app/about/page.tsx` | Profile, experience, Python tools, skills, education. |
+| `src/components/frame.tsx` | Striped placeholder frame. Pass children to replace it with real media. |
+| `src/components/youtube.tsx` | Privacy-friendly YouTube embed. |
+| `src/app/globals.css` | Design tokens (`--ink`, `--paper`, `--muted`, `--dim`, `--line`) and the `display`, `label`, `bar`, `frame` utilities. |
+| `public/resume/` | Resume PDF linked from the hero and about page. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Adding real media
 
-## Learn More
+Every striped box is a `<Frame caption="…">`. To swap one for a turntable or screenshot, put the file in `public/` and pass it as children:
 
-To learn more about Next.js, take a look at the following resources:
+```tsx
+<Frame caption="One Song turntable">
+  <video src="/media/one-song-turntable.mp4" autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+</Frame>
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To give a project a YouTube hero, set `videoId` on it in `src/lib/data.ts`. Tankhead and the showcase biped already have one.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding a project
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Append an entry to `projects` in `src/lib/data.ts`. The home grid, the detail route, prev/next links, the rig counter and the sitemap all derive from that array. Set `NEXT_PUBLIC_SITE_URL` in production so the sitemap uses the real domain.
